@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{9C1C1D61-8E7F-4B1D-B0B3-DBA346BF5D43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{89C27703-6AC0-4C45-8BB2-0AA119FC416D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{89C27703-6AC0-4C45-8BB2-0AA119FC416D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityEntities", "IdentityEntities\IdentityEntities.csproj", "{0FAF1F70-296F-4EA3-ACCA-25DF329531FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{89C27703-6AC0-4C45-8BB2-0AA119FC416D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89C27703-6AC0-4C45-8BB2-0AA119FC416D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89C27703-6AC0-4C45-8BB2-0AA119FC416D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FAF1F70-296F-4EA3-ACCA-25DF329531FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAF1F70-296F-4EA3-ACCA-25DF329531FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAF1F70-296F-4EA3-ACCA-25DF329531FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAF1F70-296F-4EA3-ACCA-25DF329531FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

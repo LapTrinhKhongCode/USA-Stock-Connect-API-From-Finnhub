@@ -1,20 +1,19 @@
 using ServiceContracts;
 using Services;
 using StockMarketSolution;
+using StockMarketSolution.StartupExtension;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Services
-builder.Services.AddControllersWithViews();
-builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection("TradingOptions"));
-builder.Services.AddSingleton<IStocksService, StocksService>();
-builder.Services.AddSingleton<IFinnhubService, FinnhubService>();
-builder.Services.AddHttpClient();
+
+
+builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
-
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
