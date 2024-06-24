@@ -51,14 +51,14 @@ namespace StockMarketSolution.StartupExtension
                 .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
 
 
-            services.AddAuthorization(options =>
-            {
-                options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build(); //enforces authoriation policy (user must be authenticated) for all the action methods
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build(); //enforces authoriation policy (user must be authenticated) for all the action methods
+            //});
 
-            services.ConfigureApplicationCookie(options => {
-                options.LoginPath = "/Account/Login";
-            });
+            //services.ConfigureApplicationCookie(options => {
+            //    options.LoginPath = "/Account/Login";
+            //});
             return services;    
         } 
     }
