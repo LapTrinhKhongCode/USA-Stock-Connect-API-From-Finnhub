@@ -24,7 +24,7 @@ namespace StockMarketSolution.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(RegisterDTO registerDTO)
+        public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
             if(ModelState.IsValid == false)
             {
@@ -51,7 +51,36 @@ namespace StockMarketSolution.Controllers
                 return View(registerDTO);
             }
         }
-        
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();  
+        }
+
+        [HttpPost]        
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        {
+			if (ModelState.IsValid == false)
+			{
+				ViewBag.Errors = ModelState.Values.SelectMany(temp => temp.Errors).Select(temp => temp.ErrorMessage);
+				return View(loginDTO);
+			}
+
+            var result = await _signInManager.PasswordSignInAsync(loginDTO.UserName, loginDTO.Password, isPersistent: false, lockoutOnFailure: false);
+
+			if (result.Succeeded)
+			{
+				return RedirectToAction(nameof(TradeController.Index), "Trade");
+			}
+
+			ModelState.AddModelError("Login", "Invalid username or password");
+			return View(loginDTO);
+		}
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(TradeController.Index),"Trade");
+        }
         
 
     }

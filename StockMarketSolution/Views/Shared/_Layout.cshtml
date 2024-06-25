@@ -2,64 +2,90 @@
 
 <html>
 <head>
- <meta name="viewport" content="width=device-width" />
- <title>@ViewBag.Title | Stocks</title>
- <link href="~/StyleSheet.css" rel="stylesheet" />
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewBag.Title | Stocks</title>
+	<link href="~/StyleSheet.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	<!-- meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Premium HTML5 Template by Indonez">
+	<meta name="keywords" content="blockit, uikit3, indonez, handlebars, scss, javascript">
+	<meta name="author" content="Indonez">
+	<meta name="theme-color" content="#FC5B3F">
+	<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/fonts/inter-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/fonts/inter-v12-latin-500.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/fonts/inter-v12-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/css/style.css" as="style">
+	<link rel="preload" href="/js/vendors/uikit.min.js" as="script">
+	<link rel="preload" href="/js/utilities.min.js" as="script">
+	<link rel="preload" href="/js/config-theme.js" as="script">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<script src="/js/vendors/uikit.min.js"></script>
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png">
+
 </head>
 <body>
- <div class="container">
-  <div class="page-content">
-   <div class="margin-bottom">
-    <div class="flex" id="top-bar-div">
-     <div class="flex-1" id="app-title-div">
-      <h1 class="app-title">
-       <i class="fa-solid fa-money-bill-trend-up"></i>
-       Stocks
-      </h1>
-     </div>
+	<div class="container">
+		<div class="page-content">
+			<div class="margin-bottom">
+				<div class="flex" id="top-bar-div">
+					<div class="flex-1" id="app-title-div">
+						<h1 class="app-title">
+							<i class="fa-solid fa-money-bill-trend-up"></i>
+							Stocks
+						</h1>
+					</div>
 
-     <div class="flex-1 pr" id="search-box-div">
+					<div class="flex-1 pr" id="search-box-div">
 
-      <input type="search" class="search-text" placeholder="Search Stocks" name="SearchText" />
-      <i class="fa-solid fa-gear"></i>
+						<input type="search" class="search-text" placeholder="Search Stocks" name="SearchText" />
+						<i class="fa-solid fa-gear"></i>
 
-      <button class="button button-blue-back ml login-button">Login</button>
-     </div>
-    </div>
+						<a asp-controller="Account" asp-action="Login" class="button button-blue-back ml login-button">Login</a>
+					</div>
+				</div>
 
-   </div>
+			</div>
 
 
-   <div class="navbar mb">
-    <ul>
-     @if (ViewBag.CurrentUrl == "~/Trade/Index")
-     {
-      <li><a href="~/Trade/Index" class="nav-active">Trade</a></li>
-     }
-     else
-     {
-      <li><a href="~/Trade/Index">Trade</a></li>
-     }
+			<div class="navbar mb">
+				<ul>
+					@if (ViewBag.CurrentUrl == "~/Trade/Index")
+					{
+						<li><a href="~/Trade/Index" class="nav-active">Trade</a></li>
+					}
+					else
+					{
+						<li><a href="~/Trade/Index">Trade</a></li>
+					}
 
-     @if (ViewBag.CurrentUrl == "~/Trade/Orders")
-     {
-      <li><a href="~/Trade/Orders" class="nav-active">Orders</a></li>
-     }
-     else
-     {
-      <li><a href="~/Trade/Orders">Orders</a></li>
-     }
-    </ul>
-   </div>
+					@if (ViewBag.CurrentUrl == "~/Trade/Orders")
+					{
+						<li><a href="~/Trade/Orders" class="nav-active">Orders</a></li>
+					}
+					else
+					{
+						<li><a href="~/Trade/Orders">Orders</a></li>
+					}
+				</ul>
+			</div>
 
-   @RenderBody()
-  </div>
+			@RenderBody()
+		</div>
 
- </div>
+	</div>
 
- @await RenderSectionAsync("scripts", required: false)
+	@await RenderSectionAsync("scripts", required: false)
+	<!-- javascript -->
+	<script src="js/utilities.min.js"></script>
+	<script src="js/config-theme.js"></script>
 </body>
 </html>
