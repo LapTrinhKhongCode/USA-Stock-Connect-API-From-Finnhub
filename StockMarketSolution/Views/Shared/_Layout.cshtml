@@ -33,20 +33,20 @@
 
 <body>
 	<!-- page loader begin -->
-	<div class="page-loader">
+@* 	<div class="page-loader">
 		<div></div>
 		<div></div>
 		<div></div>
-	</div>
+	</div> *@
 	<!-- page loader end -->
 	<!-- header begin -->
 	<header>
-		<div class="uk-section uk-padding-remove-vertical">
+		<div class="uk-section uk-padding-remove-vertical in-header-inner uk-background-cover uk-background-top-center" style="background-image: url(img/in-liquid-slide-bg.png);">
 			<nav class="uk-navbar-container" data-uk-sticky="show-on-up: true; animation: uk-animation-slide-top;">
 				<div class="uk-container" data-uk-navbar>
 					<div class="uk-navbar-left">
 						<a class="uk-navbar-item uk-logo" asp-controller="Home" asp-action="Index">
-							<img src="img/user/header-logo-6ohuZh.svg" alt="logo" width="160" height="34">
+							<img src="/img/user/header-logo-6ohuZh.svg" alt="logo" width="160" height="34">
 						</a>
 						<ul class="uk-navbar-nav uk-visible@m">
 							<li>
@@ -60,7 +60,7 @@
 								</div> *@
 							</li>
 							<li>
-								<a href="markets.html">Markets</a>
+								<a asp-action="Index" asp-controller="Market">Markets</a>
 							</li>
 							<li>
 								<a href="#">Company<span data-uk-navbar-parent-icon></span></a>
@@ -109,7 +109,7 @@
 
 								
 								<li>
-								<a asp-controller="Account" asp-action="Logout" class="uk-border-rounded">Logout</a>
+								<a asp-controller="Account" asp-action="Logout" class="">Logout</a>
 								</li>
 							}
 							else
@@ -187,7 +187,7 @@
 			<div class="uk-container uk-text-small">
 				<div class="uk-child-width-1-2@m" data-uk-grid="">
 					<div class="in-footer-logo">
-						<img src="img/in-lazy.gif" data-src="img/in-logo.svg" alt="logo" width="127" height="27" data-uk-img="">
+						<img src="/img/in-lazy.gif" data-src="/img/in-logo.svg" alt="logo" width="127" height="27" data-uk-img="">
 					</div>
 					<div class="uk-flex uk-flex-right@m">
 						<!-- social media begin -->

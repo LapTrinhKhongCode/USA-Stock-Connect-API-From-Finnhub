@@ -5,6 +5,38 @@
 	ViewBag.CurrentUrl = "~/Trade/Index";
 }
 
+
+<div class="navbar mb">
+	<ul>
+		@if (ViewBag.CurrentUrl == "~/Explore")
+		{
+			<li><a asp-controller="Stocks" asp-action="Explore" class="nav-active">Explore</a></li>
+		}
+		else
+		{
+			<li><a asp-controller="Stocks" asp-action="Explore">Explore</a></li>
+		}
+
+		@if (ViewBag.CurrentUrl == "~/Trade/Index")
+		{
+			<li><a href="#" class="nav-active">Trade</a></li>
+		}
+		else
+		{
+			<li><a href="#">Trade</a></li>
+		}
+
+		@if (ViewBag.CurrentUrl == "~/Trade/Orders")
+		{
+			<li><a asp-controller="Trade" asp-action="Orders" class="nav-active">Orders</a></li>
+		}
+		else
+		{
+			<li><a asp-controller="Trade" asp-action="Orders">Orders</a></li>
+		}
+	</ul>
+</div>
+
 <div class="text-grey ml">
 	<span>Stocks</span>
 	<i class="fa-solid fa-caret-right"></i>
@@ -24,9 +56,6 @@
 
 				<div class="date"></div>
 			</div>
-
-
-
 
 			<div id="new-order-panel">
 
@@ -78,7 +107,7 @@
 
 
 @section Scripts {
-	@* import the FinnhubScript.js file to update the price *@
+	@* import the FinnhubScript.js file to update the price   *@
 	<script src="~/js/FinnhubScript.js">
 	</script>
 }
