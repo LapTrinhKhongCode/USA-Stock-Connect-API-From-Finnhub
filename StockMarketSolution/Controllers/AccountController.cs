@@ -39,7 +39,7 @@ namespace StockMarketSolution.Controllers
                 //Sign in
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return RedirectToAction(nameof(TradeController.Index), "Trade");
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
             else
             {
@@ -70,7 +70,7 @@ namespace StockMarketSolution.Controllers
 
 			if (result.Succeeded)
 			{
-				return RedirectToAction(nameof(TradeController.Index), "Trade");
+				return RedirectToAction(nameof(HomeController.Index), "Home");
 			}
 
 			ModelState.AddModelError("Login", "Invalid username or password");
@@ -79,7 +79,7 @@ namespace StockMarketSolution.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(TradeController.Index),"Trade");
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
         
 

@@ -8,7 +8,7 @@ using StockMarketSolution.Models;
 namespace StockMarketSolution.Controllers
 {
     [Route("[controller]")]
-    [AllowAnonymous]
+    //[AllowAnonymous]
     public class TradeController : Controller
     {
         private readonly TradingOptions _tradingOptions;
@@ -33,7 +33,7 @@ namespace StockMarketSolution.Controllers
         }
 
 
-        [Route("/")]
+        //[Route("/")]
         [Route("[action]")]
         [Route("~/[controller]")]
         public IActionResult Index()

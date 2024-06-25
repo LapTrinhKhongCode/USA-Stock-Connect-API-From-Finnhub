@@ -1044,6 +1044,12 @@ a.uk-link-reset,
 /*
  * 1. Style
  */
+
+.header {
+    color: #707070;
+    background-color: #707070;
+}
+
 .uk-table th {
   padding: 16px 12px;
   text-align: left;
