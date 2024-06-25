@@ -1,6 +1,10 @@
 YOU NEED VISUAL STUDIO TO RUN THIS PROJECT, SIMPLY RUN FILE ->  STOCKMARKETSOLUTION.SLN -> RUN APPLICATION !
 
 
+**NOTE: Edit the following information as you like to be able to run this application, this information is in the appsettings.json file
+
+![image](https://github.com/LapTrinhKhongCode/USA-Stock-Connect-API-From-Finnhub/assets/120693774/1bcd45c3-1fb6-408a-886e-9c4259c9a444)
+
 
 #USA STOCK USE API FROM FINNHUB
 
