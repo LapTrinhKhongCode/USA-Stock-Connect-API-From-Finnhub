@@ -12,5 +12,7 @@ namespace StockMarketSolution.Controllers
 		{
 			return View();
 		}
+
+
 	}
 }

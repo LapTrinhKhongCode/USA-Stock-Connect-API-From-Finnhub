@@ -1,137 +1,149 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using ServiceContracts;
 using ServiceContracts.DTO;
+using ServiceContracts.FinnhubService;
+using ServiceContracts.StocksService;
 using StockMarketSolution.Models;
+using System.Text.Json;
 
 namespace StockMarketSolution.Controllers
 {
-    [Route("[controller]")]
-    //[AllowAnonymous]
-    public class TradeController : Controller
-    {
-        private readonly TradingOptions _tradingOptions;
-        private readonly IStocksService _stocksService;
-        private readonly IFinnhubService _finnhubService;
-        private readonly IConfiguration _configuration;
+	[Route("[controller]")]
+	//[AllowAnonymous]
+	public class TradeController : Controller
+	{
+		private readonly TradingOptions _tradingOptions;
+		private readonly IBuyOrdersService _stocksBuyOrdersService;
+		private readonly ISellOrdersService _stocksSellOrdersService;
+		private readonly IFinnhubSearchStocksService _finnhubSeachStocksService;
+		private readonly IFinnhubCompanyProfileService _finnhubCompanyProfileService;
+		private readonly IFinnhubStockPriceQuoteService _finnhubStockPriceQuoteService;
+		private readonly IConfiguration _configuration;
 
 
-        /// <summary>
-        /// Constructor for TradeController that executes when a new object is created for the class
-        /// </summary>
-        /// <param name="tradingOptions">Injecting TradeOptions config through Options pattern</param>
-        /// <param name="stocksService">Injecting StocksService</param>
-        /// <param name="finnhubService">Injecting FinnhubService</param>
-        /// <param name="configuration">Injecting IConfiguration</param>
-        public TradeController(IOptions<TradingOptions> tradingOptions, IStocksService stocksService, IFinnhubService finnhubService, IConfiguration configuration)
-        {
-            _tradingOptions = tradingOptions.Value;
-            _stocksService = stocksService;
-            _finnhubService = finnhubService;
-            _configuration = configuration;
-        }
+		/// <summary>
+		/// Constructor for TradeController that executes when a new object is created for the class
+		/// </summary>
+		/// <param name="tradingOptions">Injecting TradeOptions config through Options pattern</param>
+		/// <param name="stocksBuyOrdersService">Injecting StocksService</param>
+		/// <param name="stocksSellOrdersService">Injecting StocksService</param>
+		/// <param name="finnhubSearchStocksService">Injecting FinnhubSearchStocksService</param>
+		/// <param name="finnhubCompanyProfileService">Injecting FinnhubCompanyProfileService</param>
+		/// <param name="finnhubStockPriceQuoteService">Injecting FinnhubStockPriceQuoteService</param>
+		/// <param name="configuration">Injecting IConfiguration</param>
+		public TradeController(IOptions<TradingOptions> tradingOptions, IBuyOrdersService stocksBuyOrdersService, ISellOrdersService stocksSellOrdersService, IFinnhubSearchStocksService finnhubSearchStocksService, IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, IConfiguration configuration)
+		{
+			_tradingOptions = tradingOptions.Value;
+			_stocksBuyOrdersService = stocksBuyOrdersService;
+			_stocksSellOrdersService = stocksSellOrdersService;
+			_finnhubSeachStocksService = finnhubSearchStocksService;
+			_finnhubCompanyProfileService = finnhubCompanyProfileService;
+			_finnhubStockPriceQuoteService = finnhubStockPriceQuoteService;
+			_configuration = configuration;
+		}
 
 
-        //[Route("/")]
-        [Route("[action]")]
-        [Route("~/[controller]")]
-        public IActionResult Index()
-        {
-            //reset stock symbol if not exists
-            if (string.IsNullOrEmpty(_tradingOptions.DefaultStockSymbol))
-                _tradingOptions.DefaultStockSymbol = "MSFT";
 
 
-            //get company profile from API server
-            Dictionary<string, object>? companyProfileDictionary = _finnhubService.GetCompanyProfile(_tradingOptions.DefaultStockSymbol);
-
-            //get stock price quotes from API server
-            Dictionary<string, object>? stockQuoteDictionary = _finnhubService.GetStockPriceQuote(_tradingOptions.DefaultStockSymbol);
-
-
-            //create model object
-            StockTrade stockTrade = new StockTrade() { StockSymbol = _tradingOptions.DefaultStockSymbol };
-
-            //load data from finnHubService into model object
-            if (companyProfileDictionary != null && stockQuoteDictionary != null)
-            {
-                stockTrade = new StockTrade() { StockSymbol = companyProfileDictionary["ticker"].ToString(), StockName = companyProfileDictionary["name"].ToString(), Quantity = _tradingOptions.DefaultOrderQuantity ?? 0, Price = Convert.ToDouble(stockQuoteDictionary["c"].ToString()) };
-            }
-
-            //Send Finnhub token to view
-            ViewBag.FinnhubToken = _configuration["FinnhubToken"];
-
-            return View(stockTrade);
-        }
+		[Route("[action]/{stockSymbol}")]
+		[Route("~/[controller]/{stockSymbol}")]
+		public async Task<IActionResult> Index(string stockSymbol)
+		{
+			//reset stock symbol if not exists
+			if (string.IsNullOrEmpty(stockSymbol))
+				stockSymbol = "MSFT";
 
 
-        [Route("[action]")]
-        [HttpPost]
-        public IActionResult BuyOrder(BuyOrderRequest buyOrderRequest)
-        {
-            //update date of order
-            buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
+			//get company profile from API server
+			Dictionary<string, object>? companyProfileDictionary = await _finnhubCompanyProfileService.GetCompanyProfile(stockSymbol);
 
-            //re-validate the model object after updating the date
-            ModelState.Clear();
-            TryValidateModel(buyOrderRequest);
+			//get stock price quotes from API server
+			Dictionary<string, object>? stockQuoteDictionary = await _finnhubStockPriceQuoteService.GetStockPriceQuote(stockSymbol);
 
 
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                StockTrade stockTrade = new StockTrade() { StockName = buyOrderRequest.StockName, Quantity = buyOrderRequest.Quantity, StockSymbol = buyOrderRequest.StockSymbol };
-                return View("Index", stockTrade);
-            }
+			//create model object
+			StockTrade stockTrade = new StockTrade() { StockSymbol = stockSymbol };
 
-            //invoke service method
-            BuyOrderResponse buyOrderResponse = _stocksService.CreateBuyOrder(buyOrderRequest);
+			//load data from finnHubService into model object
+			if (companyProfileDictionary != null && stockQuoteDictionary != null)
+			{
+				stockTrade = new StockTrade() { StockSymbol = companyProfileDictionary["ticker"].ToString(), StockName = companyProfileDictionary["name"].ToString(), Quantity = _tradingOptions.DefaultOrderQuantity ?? 0, Price = Convert.ToDouble(stockQuoteDictionary["c"].ToString()) };
+			}
 
-            return RedirectToAction(nameof(Orders));
-        }
+			//Send Finnhub token to view
+			ViewBag.FinnhubToken = _configuration["FinnhubToken"];
 
-
-        [Route("[action]")]
-        [HttpPost]
-        public IActionResult SellOrder(SellOrderRequest sellOrderRequest)
-        {
-            //update date of order
-            sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
-
-            //re-validate the model object after updating the date
-            ModelState.Clear();
-            TryValidateModel(sellOrderRequest);
-
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                StockTrade stockTrade = new StockTrade() { StockName = sellOrderRequest.StockName, Quantity = sellOrderRequest.Quantity, StockSymbol = sellOrderRequest.StockSymbol };
-                return View("Index", stockTrade);
-            }
-
-            //invoke service method
-            SellOrderResponse sellOrderResponse = _stocksService.CreateSellOrder(sellOrderRequest);
-
-            return RedirectToAction(nameof(Orders));
-        }
+			return View(stockTrade);
+		}
 
 
-        [Route("[action]")]
-        public IActionResult Orders()
-        {
-            //invoke service methods
-            List<BuyOrderResponse> buyOrderResponses = _stocksService.GetBuyOrders();
-            List<SellOrderResponse> sellOrderResponses = _stocksService.GetSellOrders();
 
-            //create model object
-            Orders orders = new Orders() { BuyOrders = buyOrderResponses, SellOrders = sellOrderResponses };
+		[Route("[action]")]
+		[HttpPost]
+		public async Task<IActionResult> BuyOrder(BuyOrderRequest buyOrderRequest)
+		{
+			//update date of order
+			buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
 
-            ViewBag.TradingOptions = _tradingOptions;
+			//re-validate the model object after updating the date
+			ModelState.Clear();
+			TryValidateModel(buyOrderRequest);
 
-            return View(orders);
-        }
-    }
+
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				StockTrade stockTrade = new StockTrade() { StockName = buyOrderRequest.StockName, Quantity = buyOrderRequest.Quantity, StockSymbol = buyOrderRequest.StockSymbol };
+				return View("Index", stockTrade);
+			}
+
+			//invoke service method
+			BuyOrderResponse buyOrderResponse = await _stocksBuyOrdersService.CreateBuyOrder(buyOrderRequest);
+
+			return RedirectToAction(nameof(Orders));
+		}
+
+
+		[Route("[action]")]
+		[HttpPost]
+		public async Task<IActionResult> SellOrder(SellOrderRequest sellOrderRequest)
+		{
+			//update date of order
+			sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
+
+			//re-validate the model object after updating the date
+			ModelState.Clear();
+			TryValidateModel(sellOrderRequest);
+
+			if (!ModelState.IsValid)
+			{
+				ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				StockTrade stockTrade = new StockTrade() { StockName = sellOrderRequest.StockName, Quantity = sellOrderRequest.Quantity, StockSymbol = sellOrderRequest.StockSymbol };
+				return View("Index", stockTrade);
+			}
+
+			//invoke service method
+			SellOrderResponse sellOrderResponse = await _stocksSellOrdersService.CreateSellOrder(sellOrderRequest);
+
+			return RedirectToAction(nameof(Orders));
+		}
+
+
+		[Route("[action]")]
+		public async Task<IActionResult> Orders()
+		{
+			//invoke service methods
+			List<BuyOrderResponse> buyOrderResponses = await _stocksBuyOrdersService.GetBuyOrders();
+			List<SellOrderResponse> sellOrderResponses = await _stocksSellOrdersService.GetSellOrders();
+
+			//create model object
+			Orders orders = new Orders() { BuyOrders = buyOrderResponses, SellOrders = sellOrderResponses };
+
+			ViewBag.TradingOptions = _tradingOptions;
+
+			return View(orders);
+		}
+	}
 }
 
 
